@@ -97,8 +97,7 @@ export default function CoverLetterPreview({ data }: CoverLetterPreviewProps) {
       {/* Greeting */}
       <div className={cn('mt-6', styles.greeting)}>
         <p>
-          Dear{' '}
-          {data.companyInfo.hiringManager || 'Hiring Manager'},
+          Dear {data.companyInfo.hiringManager || 'Hiring Manager'},
         </p>
       </div>
 
@@ -108,16 +107,16 @@ export default function CoverLetterPreview({ data }: CoverLetterPreviewProps) {
           I am writing to express my strong interest in the{' '}
           <span className="font-semibold">
             {data.companyInfo.position || '[Position]'}
-          </span>{' '}
-          position at{' '}
+          </span>
+          {' '}position at{' '}
           <span className="font-semibold">
             {data.companyInfo.companyName || '[Company Name]'}
           </span>
           . With{' '}
           <span className="font-semibold">
             {data.experienceInfo.yearsOfExperience || '[X]'} years of experience
-          </span>{' '}
-          as a{' '}
+          </span>
+          {' '}as a{' '}
           <span className="font-semibold">
             {data.experienceInfo.currentRole || '[Current Role]'}
           </span>
@@ -129,9 +128,10 @@ export default function CoverLetterPreview({ data }: CoverLetterPreviewProps) {
       {data.skills && (
         <div className={cn(styles.section, styles.body)}>
           <p>
-            My technical expertise includes: <span className="font-semibold">{data.skills}</span>.
-            These skills have enabled me to deliver high-quality solutions and drive meaningful
-            results in my previous roles.
+            My technical expertise includes:{' '}
+            <span className="font-semibold">{data.skills}</span>. These skills
+            have enabled me to deliver high-quality solutions and drive
+            meaningful results in my previous roles.
           </p>
         </div>
       )}
@@ -140,9 +140,9 @@ export default function CoverLetterPreview({ data }: CoverLetterPreviewProps) {
       {data.achievements && (
         <div className={cn(styles.section, styles.body)}>
           <p>
-            Throughout my career, I have achieved notable successes, including: {data.achievements}.
-            These experiences have honed my ability to tackle complex challenges and deliver
-            innovative solutions.
+            Throughout my career, I have achieved notable successes, including:{' '}
+            {data.achievements}. These experiences have honed my ability to
+            tackle complex challenges and deliver innovative solutions.
           </p>
         </div>
       )}
@@ -157,9 +157,10 @@ export default function CoverLetterPreview({ data }: CoverLetterPreviewProps) {
       {/* Closing */}
       <div className={cn(styles.section, styles.body)}>
         <p>
-          I would welcome the opportunity to discuss how my background, skills, and enthusiasm
-          align with the needs of your team. Thank you for considering my application. I look
-          forward to the possibility of contributing to{' '}
+          I would welcome the opportunity to discuss how my background, skills,
+          and enthusiasm align with the needs of your team. Thank you for
+          considering my application. I look forward to the possibility of
+          contributing to{' '}
           {data.companyInfo.companyName || 'your organization'}.
         </p>
       </div>
@@ -167,7 +168,9 @@ export default function CoverLetterPreview({ data }: CoverLetterPreviewProps) {
       {/* Signature */}
       <div className={cn('mt-8', styles.body)}>
         <p>Sincerely,</p>
-        <p className="mt-4 font-semibold">{data.personalInfo.name || 'Your Name'}</p>
+        <p className="mt-4 font-semibold">
+          {data.personalInfo.name || 'Your Name'}
+        </p>
       </div>
     </div>
   );
