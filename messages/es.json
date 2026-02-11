@@ -1,0 +1,47 @@
+{
+  "CoverLetter": {
+    "title": "Generador de Cartas de Presentación",
+    "subtitle": "Crea cartas de presentación profesionales en minutos",
+    "sections": {
+      "personalInfo": "Información Personal",
+      "companyInfo": "Información de la Empresa",
+      "experience": "Experiencia",
+      "skillsDetails": "Habilidades y Detalles"
+    },
+    "fields": {
+      "fullName": "Nombre Completo",
+      "email": "Correo Electrónico",
+      "phone": "Teléfono",
+      "address": "Dirección",
+      "companyName": "Nombre de la Empresa",
+      "position": "Posición",
+      "hiringManager": "Gerente de Contratación",
+      "currentRole": "Rol Actual",
+      "yearsOfExperience": "Años de Experiencia",
+      "skills": "Habilidades",
+      "achievements": "Logros",
+      "customMessage": "Mensaje Personalizado"
+    },
+    "buttons": {
+      "generatePDF": "Generar PDF",
+      "save": "Guardar",
+      "clear": "Limpiar",
+      "preview": "Vista Previa"
+    },
+    "file": {
+      "upload": "Subir Archivo",
+      "dropZone": "Arrastra tu currículum o descripción de trabajo aquí",
+      "supported": "Formatos soportados: PDF, DOCX",
+      "processing": "Procesando archivo..."
+    },
+    "url": {
+      "placeholder": "Ingresa URL de oferta de trabajo",
+      "fetch": "Obtener Contenido"
+    },
+    "status": {
+      "loading": "Cargando...",
+      "success": "Éxito",
+      "error": "Error"
+    }
+  }
+}

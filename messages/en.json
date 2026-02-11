@@ -1,0 +1,47 @@
+{
+  "CoverLetter": {
+    "title": "Cover Letter Generator",
+    "subtitle": "Create professional cover letters in minutes",
+    "sections": {
+      "personalInfo": "Personal Information",
+      "companyInfo": "Company Information",
+      "experience": "Experience",
+      "skillsDetails": "Skills & Details"
+    },
+    "fields": {
+      "fullName": "Full Name",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address",
+      "companyName": "Company Name",
+      "position": "Position",
+      "hiringManager": "Hiring Manager",
+      "currentRole": "Current Role",
+      "yearsOfExperience": "Years of Experience",
+      "skills": "Skills",
+      "achievements": "Achievements",
+      "customMessage": "Custom Message"
+    },
+    "buttons": {
+      "generatePDF": "Generate PDF",
+      "save": "Save",
+      "clear": "Clear",
+      "preview": "Preview"
+    },
+    "file": {
+      "upload": "Upload File",
+      "dropZone": "Drop your resume or job description here",
+      "supported": "Supported formats: PDF, DOCX",
+      "processing": "Processing file..."
+    },
+    "url": {
+      "placeholder": "Enter job posting URL",
+      "fetch": "Fetch Content"
+    },
+    "status": {
+      "loading": "Loading...",
+      "success": "Success",
+      "error": "Error"
+    }
+  }
+}
