@@ -1,6 +1,7 @@
 'use client';
 
 import { ChangeEvent, FormEvent } from 'react';
+import { useTranslations } from 'next-intl';
 import { CoverLetterData } from '@/lib/types';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
@@ -13,6 +14,8 @@ interface CoverLetterFormProps {
 }
 
 export default function CoverLetterForm({ data, onChange }: CoverLetterFormProps) {
+  const t = useTranslations('CoverLetter');
+  
   const handleChange = (field: string, value: string, section?: string) => {
     if (section) {
       onChange({
@@ -41,11 +44,11 @@ export default function CoverLetterForm({ data, onChange }: CoverLetterFormProps
     <form className="space-y-6" onSubmit={(e: FormEvent) => e.preventDefault()}>
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Personal Information</CardTitle>
+          <CardTitle className="text-lg">{t('sections.personalInfo')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <Label htmlFor="personalInfo.name">Full Name *</Label>
+            <Label htmlFor="personalInfo.name">{t('fields.fullName')} *</Label>
             <Input
               id="personalInfo.name"
               name="personalInfo.name"
@@ -56,7 +59,7 @@ export default function CoverLetterForm({ data, onChange }: CoverLetterFormProps
             />
           </div>
           <div>
-            <Label htmlFor="personalInfo.email">Email *</Label>
+            <Label htmlFor="personalInfo.email">{t('fields.email')} *</Label>
             <Input
               id="personalInfo.email"
               name="personalInfo.email"
@@ -68,7 +71,7 @@ export default function CoverLetterForm({ data, onChange }: CoverLetterFormProps
             />
           </div>
           <div>
-            <Label htmlFor="personalInfo.phone">Phone</Label>
+            <Label htmlFor="personalInfo.phone">{t('fields.phone')}</Label>
             <Input
               id="personalInfo.phone"
               name="personalInfo.phone"
@@ -79,7 +82,7 @@ export default function CoverLetterForm({ data, onChange }: CoverLetterFormProps
             />
           </div>
           <div>
-            <Label htmlFor="personalInfo.address">Address</Label>
+            <Label htmlFor="personalInfo.address">{t('fields.address')}</Label>
             <Input
               id="personalInfo.address"
               name="personalInfo.address"
@@ -93,11 +96,11 @@ export default function CoverLetterForm({ data, onChange }: CoverLetterFormProps
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Company Information</CardTitle>
+          <CardTitle className="text-lg">{t('sections.companyInfo')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <Label htmlFor="companyInfo.companyName">Company Name *</Label>
+            <Label htmlFor="companyInfo.companyName">{t('fields.companyName')} *</Label>
             <Input
               id="companyInfo.companyName"
               name="companyInfo.companyName"
@@ -108,7 +111,7 @@ export default function CoverLetterForm({ data, onChange }: CoverLetterFormProps
             />
           </div>
           <div>
-            <Label htmlFor="companyInfo.position">Position *</Label>
+            <Label htmlFor="companyInfo.position">{t('fields.position')} *</Label>
             <Input
               id="companyInfo.position"
               name="companyInfo.position"
@@ -119,7 +122,7 @@ export default function CoverLetterForm({ data, onChange }: CoverLetterFormProps
             />
           </div>
           <div>
-            <Label htmlFor="companyInfo.hiringManager">Hiring Manager</Label>
+            <Label htmlFor="companyInfo.hiringManager">{t('fields.hiringManager')}</Label>
             <Input
               id="companyInfo.hiringManager"
               name="companyInfo.hiringManager"
@@ -133,11 +136,11 @@ export default function CoverLetterForm({ data, onChange }: CoverLetterFormProps
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Experience</CardTitle>
+          <CardTitle className="text-lg">{t('sections.experience')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <Label htmlFor="experienceInfo.currentRole">Current Role *</Label>
+            <Label htmlFor="experienceInfo.currentRole">{t('fields.currentRole')} *</Label>
             <Input
               id="experienceInfo.currentRole"
               name="experienceInfo.currentRole"
@@ -148,7 +151,7 @@ export default function CoverLetterForm({ data, onChange }: CoverLetterFormProps
             />
           </div>
           <div>
-            <Label htmlFor="experienceInfo.yearsOfExperience">Years of Experience *</Label>
+            <Label htmlFor="experienceInfo.yearsOfExperience">{t('fields.yearsOfExperience')} *</Label>
             <Input
               id="experienceInfo.yearsOfExperience"
               name="experienceInfo.yearsOfExperience"
@@ -163,11 +166,11 @@ export default function CoverLetterForm({ data, onChange }: CoverLetterFormProps
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Skills & Details</CardTitle>
+          <CardTitle className="text-lg">{t('sections.skillsDetails')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <Label htmlFor="skills">Key Skills *</Label>
+            <Label htmlFor="skills">{t('fields.skills')} *</Label>
             <Textarea
               id="skills"
               name="skills"
@@ -179,7 +182,7 @@ export default function CoverLetterForm({ data, onChange }: CoverLetterFormProps
             />
           </div>
           <div>
-            <Label htmlFor="achievements">Notable Achievements</Label>
+            <Label htmlFor="achievements">{t('fields.achievements')}</Label>
             <Textarea
               id="achievements"
               name="achievements"
@@ -190,7 +193,7 @@ export default function CoverLetterForm({ data, onChange }: CoverLetterFormProps
             />
           </div>
           <div>
-            <Label htmlFor="customMessage">Custom Message/Motivation *</Label>
+            <Label htmlFor="customMessage">{t('fields.customMessage')} *</Label>
             <Textarea
               id="customMessage"
               name="customMessage"
