@@ -6,8 +6,8 @@ import { useTranslations } from 'next-intl';
 import CoverLetterForm from '@/components/CoverLetterForm';
 import CoverLetterPreview from '@/components/CoverLetterPreview';
 import TemplateSelector from '@/components/TemplateSelector';
-import { FileUploader } from '@/components/FileUploader';
-import { URLFetcher } from '@/components/URLFetcher';
+import { FileUpload } from '@/components/FileUpload';
+import { URLInput } from '@/components/URLInput';
 import { LanguageToggle } from '@/components/LanguageToggle';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
@@ -42,6 +42,7 @@ export default function Home() {
   const [data, setData] = useState<CoverLetterData>(initialData);
   const [isSaved, setIsSaved] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [notification, setNotification] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
   // Load saved draft on mount
   useEffect(() => {
@@ -64,10 +65,15 @@ export default function Home() {
     return () => clearTimeout(timeoutId);
   }, [data]);
 
+  const showNotification = (type: 'success' | 'error', message: string) => {
+    setNotification({ type, message });
+    setTimeout(() => setNotification(null), 5000);
+  };
+
   const handleSaveDraft = () => {
     saveDraft(data);
     setIsSaved(true);
-    alert('Draft saved successfully!');
+    showNotification('success', 'Draft saved successfully!');
   };
 
   const handleClearDraft = () => {
@@ -75,6 +81,7 @@ export default function Home() {
       clearDraft();
       setData(initialData);
       setIsSaved(false);
+      showNotification('success', 'Data cleared successfully!');
     }
   };
 
@@ -83,10 +90,10 @@ export default function Home() {
       setIsExporting(true);
       const filename = `cover-letter-${data.companyInfo.companyName || 'draft'}.pdf`;
       await exportToPDF('cover-letter-preview', filename);
-      alert('PDF exported successfully!');
+      showNotification('success', 'PDF exported successfully!');
     } catch (error) {
       console.error('Export failed:', error);
-      alert('Failed to export PDF. Please try again.');
+      showNotification('error', 'Failed to export PDF. Please try again.');
     } finally {
       setIsExporting(false);
     }
@@ -109,6 +116,7 @@ export default function Home() {
       ...(fileData.skills && { skills: fileData.skills }),
       ...(fileData.experience && { achievements: fileData.experience }),
     }));
+    showNotification('success', 'File processed successfully!');
   };
 
   const handleUrlContentFetched = (urlData: any) => {
@@ -118,12 +126,17 @@ export default function Home() {
       companyInfo: {
         ...prev.companyInfo,
         ...(urlData.companyName && { companyName: urlData.companyName }),
-        ...(urlData.jobTitle && { position: urlData.jobTitle }),
+        ...(urlData.position && { position: urlData.position }),
       },
       ...(urlData.requirements && { 
-        customMessage: `${prev.customMessage}\n\nPosition Requirements:\n${urlData.requirements}` 
+        customMessage: urlData.requirements 
       }),
     }));
+    showNotification('success', 'Job description fetched successfully!');
+  };
+
+  const handleError = (error: string) => {
+    showNotification('error', error);
   };
 
   return (
@@ -148,7 +161,7 @@ export default function Home() {
                 className="hidden sm:flex"
               >
                 <Save className="h-4 w-4 mr-2" />
-                {isSaved ? t('buttons.save') : t('buttons.save')}
+                {t('buttons.save')}
               </Button>
               <Button
                 variant="outline"
@@ -172,6 +185,21 @@ export default function Home() {
         </div>
       </header>
 
+      {/* Notification */}
+      {notification && (
+        <div className="fixed top-20 right-4 z-50 animate-in slide-in-from-top-5">
+          <div
+            className={`px-4 py-3 rounded-lg shadow-lg ${
+              notification.type === 'success'
+                ? 'bg-green-50 border border-green-200 text-green-800'
+                : 'bg-red-50 border border-red-200 text-red-800'
+            }`}
+          >
+            {notification.message}
+          </div>
+        </div>
+      )}
+
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Template Selector */}
@@ -184,23 +212,25 @@ export default function Home() {
 
         {/* File Upload and URL Fetcher */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">{t('file.upload')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <FileUploader onFileProcessed={handleFileProcessed} />
-            </CardContent>
-          </Card>
+          <div>
+            <h3 className="text-lg font-semibold mb-3 text-slate-900">
+              Upload Resume
+            </h3>
+            <FileUpload 
+              onFileProcessed={handleFileProcessed}
+              onError={handleError}
+            />
+          </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Fetch Job Description</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <URLFetcher onContentFetched={handleUrlContentFetched} />
-            </CardContent>
-          </Card>
+          <div>
+            <h3 className="text-lg font-semibold mb-3 text-slate-900">
+              Fetch Job Description
+            </h3>
+            <URLInput 
+              onContentFetched={handleUrlContentFetched}
+              onError={handleError}
+            />
+          </div>
         </div>
 
         {/* Two Column Layout */}
@@ -209,7 +239,7 @@ export default function Home() {
           <div className="space-y-6">
             <div className="lg:sticky lg:top-4">
               <h2 className="text-xl font-bold text-slate-900 mb-4">
-                {t('sections.personalInfo')}
+                Your Information
               </h2>
               <CoverLetterForm data={data} onChange={setData} />
               
