@@ -98,8 +98,7 @@ export default function CoverLetterPreview({ data }: CoverLetterPreviewProps) {
       <div className={cn('mt-6', styles.greeting)}>
         <p>
           Dear{' '}
-          {data.companyInfo.hiringManager || 'Hiring Manager'}
-          {',
+          {data.companyInfo.hiringManager || 'Hiring Manager'},
         </p>
       </div>
 
