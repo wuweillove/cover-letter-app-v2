@@ -34,12 +34,18 @@
       "supported": "Supported formats: PDF, DOCX",
       "processing": "Processing file..."
     },
+    "upload": {
+      "dragDrop": "Drag and drop your file here, or click to browse",
+      "supportedFormats": "PDF and DOCX files supported",
+      "maxSize": "Maximum file size: 10MB"
+    },
     "url": {
       "placeholder": "Enter job posting URL",
       "fetch": "Fetch Content"
     },
     "status": {
       "loading": "Loading...",
+      "uploading": "Uploading...",
       "success": "Success",
       "error": "Error"
     }
