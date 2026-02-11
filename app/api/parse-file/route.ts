@@ -1,95 +1,104 @@
-import { NextRequest, NextResponse } from 'next/server';
-import mammoth from 'mammoth';
+import { NextResponse } from 'next/server';
 import pdfParse from 'pdf-parse';
+import mammoth from 'mammoth';
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
     const formData = await request.formData();
     const file = formData.get('file') as File;
 
     if (!file) {
-      return NextResponse.json(
-        { error: 'No file provided' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'No file provided' }, { status: 400 });
     }
 
-    const buffer = Buffer.from(await file.arrayBuffer());
-    let extractedText = '';
+    const fileExtension = file.name.split('.').pop()?.toLowerCase();
+    let text = '';
+    const metadata = {
+      fileName: file.name,
+      fileSize: file.size,
+      pageCount: 0,
+    };
 
     // Process based on file type
-    if (file.type === 'application/pdf') {
-      const pdfData = await pdfParse(buffer);
-      extractedText = pdfData.text;
-    } else if (
-      file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-    ) {
-      const result = await mammoth.extractRawText({ buffer });
-      extractedText = result.value;
+    if (fileExtension === 'pdf') {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdfData = await pdfParse(Buffer.from(arrayBuffer));
+      text = pdfData.text;
+      metadata.pageCount = pdfData.numpages;
+    } else if (fileExtension === 'docx') {
+      const arrayBuffer = await file.arrayBuffer();
+      const result = await mammoth.extractRawText({ arrayBuffer });
+      text = result.value;
     } else {
-      return NextResponse.json(
-        { error: 'Unsupported file type' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Unsupported file type' }, { status: 400 });
     }
 
-    // Parse the extracted text to identify relevant information
-    const parsedData = parseResumeContent(extractedText);
+    // Extract relevant information
+    const extractedData = extractRelevantInfo(text);
 
     return NextResponse.json({
-      success: true,
-      data: parsedData,
-      rawText: extractedText,
+      extractedData,
+      metadata,
+      success: true
     });
   } catch (error) {
-    console.error('File parsing error:', error);
+    console.error('Error processing file:', error);
     return NextResponse.json(
-      { error: 'Failed to parse file' },
+      { error: 'Failed to process file' },
       { status: 500 }
     );
   }
 }
 
-function parseResumeContent(text: string) {
-  const data: any = {
-    skills: '',
-    experience: '',
-    education: '',
-    rawText: text,
-  };
-
+function extractRelevantInfo(text: string): any {
+  const extracted: any = {};
+  
   // Extract email
   const emailMatch = text.match(/[\w.-]+@[\w.-]+\.\w+/);
   if (emailMatch) {
-    data.email = emailMatch[0];
+    extracted.email = emailMatch[0];
   }
 
-  // Extract phone
-  const phoneMatch = text.match(/(\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/);
+  // Extract phone number
+  const phoneMatch = text.match(/(?:\+1[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/);
   if (phoneMatch) {
-    data.phone = phoneMatch[0];
+    extracted.phone = phoneMatch[0];
   }
 
-  // Extract potential name (first line that's not empty and looks like a name)
+  // Extract name (first non-empty line that looks like a name)
   const lines = text.split('\n').filter(line => line.trim());
   if (lines.length > 0) {
     const firstLine = lines[0].trim();
-    if (firstLine.length < 50 && /^[A-Za-z\s]+$/.test(firstLine)) {
-      data.name = firstLine;
+    if (firstLine.length < 50 && /^[A-Za-z\s.'-]+$/.test(firstLine)) {
+      extracted.name = firstLine;
     }
   }
 
   // Extract skills section
-  const skillsMatch = text.match(/skills?:?\s*([\s\S]*?)(?=experience|education|$)/i);
+  const skillsMatch = text.match(/(?:skills?|competencies|expertise|technical skills?)[:.]?\s*([\s\S]{0,500}?)(?:\n\n|experience|education|$)/i);
   if (skillsMatch && skillsMatch[1]) {
-    data.skills = skillsMatch[1].trim().substring(0, 500);
+    extracted.skills = skillsMatch[1].trim();
   }
 
   // Extract experience section
-  const experienceMatch = text.match(/experience:?\s*([\s\S]*?)(?=education|skills|$)/i);
+  const experienceMatch = text.match(/(?:experience|work history|employment)[:.]?\s*([\s\S]{0,1000}?)(?:\n\n|education|skills|$)/i);
   if (experienceMatch && experienceMatch[1]) {
-    data.experience = experienceMatch[1].trim().substring(0, 1000);
+    extracted.experience = experienceMatch[1].trim();
   }
 
-  return data;
+  // Extract education section
+  const educationMatch = text.match(/(?:education|academic background)[:.]?\s*([\s\S]{0,500}?)(?:\n\n|experience|skills|$)/i);
+  if (educationMatch && educationMatch[1]) {
+    extracted.education = educationMatch[1].trim();
+  }
+
+  return extracted;
+}
+
+// GET method for health check
+export async function GET() {
+  return NextResponse.json({ 
+    status: 'ok', 
+    message: 'File parsing API is ready' 
+  });
 }
