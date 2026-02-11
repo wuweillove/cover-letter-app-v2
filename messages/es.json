@@ -34,12 +34,18 @@
       "supported": "Formatos soportados: PDF, DOCX",
       "processing": "Procesando archivo..."
     },
+    "upload": {
+      "dragDrop": "Arrastra y suelta tu archivo aquí, o haz clic para buscar",
+      "supportedFormats": "Archivos PDF y DOCX soportados",
+      "maxSize": "Tamaño máximo de archivo: 10MB"
+    },
     "url": {
       "placeholder": "Ingresa URL de oferta de trabajo",
       "fetch": "Obtener Contenido"
     },
     "status": {
       "loading": "Cargando...",
+      "uploading": "Subiendo...",
       "success": "Éxito",
       "error": "Error"
     }
