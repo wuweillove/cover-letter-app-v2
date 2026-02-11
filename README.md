@@ -20,6 +20,23 @@ A modern, professional cover letter generator built with Next.js 14+ and TypeScr
   - Creative - Bold and vibrant design
   - Minimal - Simple and elegant
 
+- **🌍 Multi-language Support**: Full internationalization (i18n)
+  - English and Spanish translations
+  - Easy language switching
+  - Locale-based routing
+
+- **📤 File Upload**: Smart resume parsing
+  - Drag-and-drop file upload
+  - Support for PDF and DOCX files
+  - Automatic data extraction (name, email, phone, skills, experience)
+  - File validation and size limits
+
+- **🔗 URL Fetching**: Import job descriptions
+  - Paste job posting URLs
+  - Automatic content extraction
+  - Parse company name, position, requirements
+  - Smart text parsing
+
 - **🔄 Real-time Preview**: See your cover letter as you type
 - **📥 PDF Export**: Download your cover letter as a PDF
 - **💾 Auto-save**: Automatically saves your progress to localStorage
@@ -65,7 +82,7 @@ pnpm dev
 
 4. **Open your browser**
 
-Navigate to [http://localhost:3000](http://localhost:3000)
+Navigate to [http://localhost:3000](http://localhost:3000) or [http://localhost:3000/en](http://localhost:3000/en)
 
 ## 📦 Build for Production
 
@@ -110,25 +127,37 @@ This app can be deployed to any platform that supports Next.js:
 ```
 cover-letter-app-v2/
 ├── app/
-│   ├── layout.tsx          # Root layout with metadata
-│   ├── page.tsx            # Main page with app logic
-│   └── globals.css         # Global styles
+│   ├── [locale]/               # Locale-based routing
+│   │   ├── layout.tsx          # Locale layout with i18n provider
+│   │   └── page.tsx            # Main application page
+│   ├── api/                    # API routes
+│   │   ├── parse-file/         # File parsing endpoint
+│   │   └── fetch-url/          # URL fetching endpoint
+│   └── globals.css             # Global styles
 ├── components/
-│   ├── ui/                 # Reusable UI components
+│   ├── ui/                     # Reusable UI components
 │   │   ├── Button.tsx
 │   │   ├── Input.tsx
 │   │   ├── Textarea.tsx
 │   │   ├── Label.tsx
 │   │   └── Card.tsx
-│   ├── CoverLetterForm.tsx     # Form component
+│   ├── CoverLetterForm.tsx     # Form component with i18n
 │   ├── CoverLetterPreview.tsx  # Preview component
-│   └── TemplateSelector.tsx    # Template selection
+│   ├── TemplateSelector.tsx    # Template selection
+│   ├── FileUploader.tsx        # File upload with drag-and-drop
+│   ├── URLFetcher.tsx          # URL content fetcher
+│   └── LanguageToggle.tsx      # Language switcher
 ├── lib/
-│   ├── types.ts            # TypeScript type definitions
-│   ├── utils.ts            # Utility functions
-│   ├── templates.ts        # Template configurations
-│   └── pdf-export.ts       # PDF export functionality
-├── public/                 # Static assets
+│   ├── types.ts                # TypeScript type definitions
+│   ├── utils.ts                # Utility functions
+│   ├── templates.ts            # Template configurations
+│   └── pdf-export.ts           # PDF export functionality
+├── messages/                   # i18n translation files
+│   ├── en.json                 # English translations
+│   └── es.json                 # Spanish translations
+├── public/                     # Static assets
+├── middleware.ts               # Next-intl middleware
+├── i18n.ts                     # i18n configuration
 ├── package.json
 ├── tsconfig.json
 ├── tailwind.config.js
@@ -141,24 +170,76 @@ cover-letter-app-v2/
 - **Framework**: [Next.js 14+](https://nextjs.org/) with App Router
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Internationalization**: [next-intl](https://next-intl-docs.vercel.app/)
+- **File Upload**: [react-dropzone](https://react-dropzone.js.org/)
 - **PDF Generation**: [jsPDF](https://github.com/parallax/jsPDF) + [html2canvas](https://html2canvas.hertzen.com/)
+- **File Parsing**: [mammoth](https://github.com/mwilliamson/mammoth.js) (DOCX) + [pdf-parse](https://www.npmjs.com/package/pdf-parse) (PDF)
+- **HTML Parsing**: [cheerio](https://cheerio.js.org/) + [jsdom](https://github.com/jsdom/jsdom)
 - **Icons**: [Lucide React](https://lucide.dev/)
 - **Utilities**: clsx, tailwind-merge, class-variance-authority
 
 ## 📝 Usage
 
-1. **Choose a Template**: Select from 4 professional templates
-2. **Fill in Your Information**:
+### Basic Flow
+
+1. **Choose a Language**: Toggle between English and Spanish
+2. **Choose a Template**: Select from 4 professional templates
+3. **Import Data** (Optional):
+   - **Upload Resume**: Drag and drop your resume (PDF/DOCX) to auto-fill personal info
+   - **Fetch Job Posting**: Paste a job URL to import company and position details
+4. **Fill in Your Information**:
    - Personal details (name, email, phone, address)
    - Company information (company name, position, hiring manager)
    - Experience details (current role, years of experience)
    - Skills and achievements
    - Custom message/motivation
-3. **Preview**: See real-time preview as you type
-4. **Export**: Download as PDF when ready
-5. **Save**: Your progress is automatically saved
+5. **Preview**: See real-time preview as you type
+6. **Export**: Download as PDF when ready
+7. **Save**: Your progress is automatically saved
+
+### File Upload Feature
+
+The file upload feature supports:
+- **PDF files**: Extracts text from resume PDFs
+- **DOCX files**: Parses Word documents
+- **Auto-extraction**: Automatically detects and fills:
+  - Name
+  - Email address
+  - Phone number
+  - Skills
+  - Experience
+
+### URL Fetching Feature
+
+The URL fetcher can:
+- Parse job posting pages
+- Extract company name
+- Extract position/job title
+- Parse job requirements
+- Parse responsibilities
+- Extract qualifications
 
 ## ⚙️ Configuration
+
+### Adding New Languages
+
+1. Create a new translation file in `messages/` (e.g., `messages/fr.json`)
+2. Update `middleware.ts` to include the new locale:
+
+```typescript
+export default createMiddleware({
+  locales: ['en', 'es', 'fr'],
+  defaultLocale: 'en'
+});
+```
+
+3. Update the locale matcher in the config:
+
+```typescript
+export const config = {
+  matcher: ['/', '/(es|en|fr)/:path*']
+};
+```
 
 ### TypeScript
 
@@ -190,10 +271,10 @@ module.exports = {
 
 ### Metadata
 
-Update SEO metadata in `app/layout.tsx`:
+Update SEO metadata in `app/[locale]/layout.tsx`:
 
 ```typescript
-export const metadata: Metadata = {
+export const metadata = {
   title: 'Your Title',
   description: 'Your Description',
   keywords: ['keyword1', 'keyword2'] as unknown as string,
@@ -213,6 +294,10 @@ keywords: ['keyword1', 'keyword2'] as unknown as string,
 ### PDF Export on Mobile
 
 PDF export works best on desktop. For mobile users, consider using the browser's print function.
+
+### File Size Limits
+
+Default file upload limit is 5MB. To adjust, modify the `maxSize` prop in `FileUploader` component.
 
 ## 🤝 Contributing
 
@@ -236,19 +321,25 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ## 🚀 Future Enhancements
 
+- [x] Multiple language support
+- [x] Cloud storage integration
+- [x] File upload functionality
 - [ ] More template options
 - [ ] Custom color schemes
-- [ ] Multiple language support
-- [ ] Cloud storage integration
 - [ ] AI-powered suggestions
 - [ ] Email functionality
 - [ ] Template customization
+- [ ] More language options (French, German, etc.)
+- [ ] Cloud-based document storage
+- [ ] Collaboration features
 
 ## 🙏 Acknowledgments
 
 - Next.js team for the amazing framework
 - Tailwind CSS for the utility-first CSS framework
+- next-intl for internationalization support
 - Vercel for hosting platform
+- All open-source contributors
 
 ---
 
